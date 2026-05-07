@@ -1033,3 +1033,308 @@ tbody tr:hover td {
   padding: 0 2px;
   border-radius: 2px;
 }
+
+
+
+
+/* ========================================
+   COMPLETE MOBILE RESPONSIVE
+   Add at END of style.css
+======================================== */
+
+/* Prevent overflow */
+html,
+body {
+  overflow-x: hidden;
+}
+
+img,
+canvas,
+table {
+  max-width: 100%;
+}
+
+/* Smooth sidebar animation */
+.sidebar {
+  will-change: transform;
+}
+
+/* ========================================
+   TABLET RESPONSIVE
+======================================== */
+@media (max-width: 1024px) {
+
+  .cards-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .charts-row,
+  .charts-row--stack {
+    grid-template-columns: 1fr;
+  }
+
+  .chart-card--wide {
+    grid-column: span 1;
+  }
+
+  .content {
+    padding: 20px;
+  }
+
+  .search-input {
+    width: 180px;
+  }
+}
+
+/* ========================================
+   MOBILE RESPONSIVE
+======================================== */
+@media (max-width: 768px) {
+
+  /* Sidebar */
+  .sidebar {
+    transform: translateX(-100%);
+    width: 240px;
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .sidebar-close {
+    display: block;
+  }
+
+  .main-wrapper {
+    margin-left: 0;
+  }
+
+  .hamburger {
+    display: flex;
+  }
+
+  /* Topbar */
+  .topbar {
+    padding: 12px 16px;
+    height: auto;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .topbar-left,
+  .topbar-right {
+    width: 100%;
+  }
+
+  .topbar-right {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: space-between;
+  }
+
+  .search-wrap {
+    width: 100%;
+  }
+
+  .search-input {
+    width: 100%;
+  }
+
+  /* Content */
+  .content {
+    padding: 16px;
+  }
+
+  /* Cards */
+  .cards-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .card {
+    padding: 18px;
+  }
+
+  .card-value {
+    font-size: 20px;
+  }
+
+  /* Charts */
+  .charts-row,
+  .charts-row--stack {
+    grid-template-columns: 1fr;
+  }
+
+  .chart-body {
+    height: 240px;
+  }
+
+  /* Tables */
+  .table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  table {
+    min-width: 900px;
+  }
+
+  th,
+  td {
+    padding: 12px 14px;
+  }
+
+  /* Sections */
+  .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .section-actions {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+
+  /* Forms */
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  /* Summary */
+  .summary-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  /* Modal */
+  .modal {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .modal-form {
+    padding: 18px;
+  }
+
+  /* Toast */
+  .toast-container {
+    right: 12px;
+    left: 12px;
+    bottom: 12px;
+  }
+
+  .toast {
+    min-width: auto;
+    width: 100%;
+  }
+}
+
+/* ========================================
+   SMALL MOBILE DEVICES
+======================================== */
+@media (max-width: 480px) {
+
+  /* Cards */
+  .cards-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .summary-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Typography */
+  .page-title {
+    font-size: 16px;
+  }
+
+  .card-value {
+    font-size: 18px;
+  }
+
+  .section-title {
+    font-size: 14px;
+  }
+
+  /* Buttons */
+  .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .section-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .topbar-right .btn span:last-child {
+    display: none;
+  }
+
+  /* Modal */
+  .modal {
+    border-radius: 16px;
+  }
+
+  .modal-header {
+    padding: 16px;
+  }
+
+  .modal-form {
+    padding: 16px;
+  }
+
+  .form-actions {
+    flex-direction: column;
+    padding: 0 16px;
+  }
+
+  /* Empty state */
+  .empty-state {
+    padding: 40px 16px;
+  }
+
+  /* Transaction items */
+  .tx-item {
+    padding: 12px 16px;
+  }
+
+  .tx-title {
+    font-size: 12px;
+  }
+
+  .tx-sub,
+  .tx-time {
+    font-size: 10px;
+  }
+}
+
+/* ========================================
+   EXTRA SMALL DEVICES
+======================================== */
+@media (max-width: 360px) {
+
+  .content {
+    padding: 12px;
+  }
+
+  .card {
+    padding: 16px;
+  }
+
+  .topbar {
+    padding: 10px 12px;
+  }
+
+  .search-input {
+    font-size: 12px;
+  }
+
+  .btn {
+    font-size: 12px;
+    padding: 8px 12px;
+  }
+}
