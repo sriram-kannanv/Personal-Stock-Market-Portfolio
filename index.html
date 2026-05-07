@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>StockVault — Portfolio Tracker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ===== SIDEBAR ===== -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="logo">
+        <span class="logo-icon">⬡</span>
+        <span class="logo-text">StockVault</span>
+      </div>
+      <button class="sidebar-close" id="sidebarClose" aria-label="Close sidebar">✕</button>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a href="#" class="nav-item active" data-view="dashboard">
+        <span class="nav-icon">⊞</span>
+        <span>Dashboard</span>
+      </a>
+      <a href="#" class="nav-item" data-view="portfolio">
+        <span class="nav-icon">◈</span>
+        <span>Portfolio</span>
+      </a>
+      <a href="#" class="nav-item" data-view="transactions">
+        <span class="nav-icon">⇄</span>
+        <span>Transactions</span>
+      </a>
+      <a href="#" class="nav-item" data-view="charts">
+        <span class="nav-icon">◎</span>
+        <span>Analytics</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <button class="theme-toggle" id="themeToggle" title="Toggle light/dark mode">
+        <span class="theme-icon">◑</span>
+        <span class="theme-label">Dark Mode</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- ===== MAIN CONTENT ===== -->
+  <div class="main-wrapper">
+
+    <!-- Top Bar -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="hamburger" id="hamburger" aria-label="Open menu">
+          <span></span><span></span><span></span>
+        </button>
+        <h1 class="page-title" id="pageTitle">Dashboard</h1>
+      </div>
+      <div class="topbar-right">
+        <div class="search-wrap">
+          <span class="search-icon">⌕</span>
+          <input type="text" id="globalSearch" class="search-input" placeholder="Search stocks…" autocomplete="off" />
+        </div>
+        <button class="btn btn-primary" id="openAddModal">
+          <span>＋</span> Add Stock
+        </button>
+      </div>
+    </header>
+
+    <!-- ===== VIEWS ===== -->
+    <main class="content">
+
+      <!-- DASHBOARD VIEW -->
+      <section class="view active" id="view-dashboard">
+
+        <!-- Summary Cards -->
+        <div class="cards-grid">
+          <div class="card card-accent" id="card-invested">
+            <div class="card-label">Total Invested</div>
+            <div class="card-value" id="totalInvested">₹0.00</div>
+            <div class="card-sub">Cost basis</div>
+          </div>
+          <div class="card" id="card-current">
+            <div class="card-label">Current Value</div>
+            <div class="card-value" id="currentValue">₹0.00</div>
+            <div class="card-sub">Market value</div>
+          </div>
+          <div class="card" id="card-pnl">
+            <div class="card-label">Total P&L</div>
+            <div class="card-value" id="totalPnL">₹0.00</div>
+            <div class="card-sub" id="pnlPercent">0.00%</div>
+          </div>
+          <div class="card" id="card-stocks">
+            <div class="card-label">Holdings</div>
+            <div class="card-value" id="stockCount">0</div>
+            <div class="card-sub">Unique stocks</div>
+          </div>
+        </div>
+
+        <!-- Charts Row -->
+        <div class="charts-row">
+          <div class="chart-card">
+            <div class="chart-header">
+              <h2 class="chart-title">Allocation</h2>
+              <span class="chart-badge">Pie</span>
+            </div>
+            <div class="chart-body">
+              <canvas id="allocationChart"></canvas>
+              <div class="chart-empty" id="allocEmpty">No holdings yet</div>
+            </div>
+          </div>
+          <div class="chart-card chart-card--wide">
+            <div class="chart-header">
+              <h2 class="chart-title">Profit / Loss per Stock</h2>
+              <span class="chart-badge">Bar</span>
+            </div>
+            <div class="chart-body">
+              <canvas id="pnlChart"></canvas>
+              <div class="chart-empty" id="pnlEmpty">No holdings yet</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Top Holdings -->
+        <div class="section-card">
+          <div class="section-header">
+            <h2 class="section-title">Top Holdings</h2>
+            <a href="#" class="section-link" data-view="portfolio">View all →</a>
+          </div>
+          <div id="topHoldingsTable"></div>
+        </div>
+
+      </section>
+
+      <!-- PORTFOLIO VIEW -->
+      <section class="view" id="view-portfolio">
+        <div class="section-card">
+          <div class="section-header">
+            <h2 class="section-title">My Portfolio</h2>
+            <div class="section-actions">
+              <select class="sort-select" id="sortSelect">
+                <option value="">Sort by…</option>
+                <option value="symbol-asc">Symbol A→Z</option>
+                <option value="symbol-desc">Symbol Z→A</option>
+                <option value="value-desc">Value ↓</option>
+                <option value="value-asc">Value ↑</option>
+                <option value="pnl-desc">P&L ↓</option>
+                <option value="pnl-asc">P&L ↑</option>
+              </select>
+              <button class="btn btn-ghost" id="exportCSV">↓ Export CSV</button>
+            </div>
+          </div>
+          <div class="table-wrap" id="portfolioTableWrap">
+            <div class="empty-state" id="portfolioEmpty">
+              <div class="empty-icon">📊</div>
+              <p class="empty-title">No stocks in portfolio</p>
+              <p class="empty-sub">Add your first holding to get started</p>
+              <button class="btn btn-primary" onclick="document.getElementById('openAddModal').click()">＋ Add Stock</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TRANSACTIONS VIEW -->
+      <section class="view" id="view-transactions">
+        <div class="section-card">
+          <div class="section-header">
+            <h2 class="section-title">Transaction History</h2>
+          </div>
+          <div id="transactionList">
+            <div class="empty-state" id="txEmpty">
+              <div class="empty-icon">🗒️</div>
+              <p class="empty-title">No transactions yet</p>
+              <p class="empty-sub">Your buy/edit/delete history will appear here</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ANALYTICS VIEW -->
+      <section class="view" id="view-charts">
+        <div class="section-card">
+          <div class="section-header">
+            <h2 class="section-title">Portfolio Summary</h2>
+          </div>
+          <div id="summaryStats" class="summary-grid"></div>
+        </div>
+        <div class="charts-row charts-row--stack">
+          <div class="chart-card chart-card--full">
+            <div class="chart-header">
+              <h2 class="chart-title">Allocation Breakdown</h2>
+            </div>
+            <div class="chart-body chart-body--tall">
+              <canvas id="allocationChart2"></canvas>
+              <div class="chart-empty" id="allocEmpty2">No holdings yet</div>
+            </div>
+          </div>
+          <div class="chart-card chart-card--full">
+            <div class="chart-header">
+              <h2 class="chart-title">P&L Comparison</h2>
+            </div>
+            <div class="chart-body chart-body--tall">
+              <canvas id="pnlChart2"></canvas>
+              <div class="chart-empty" id="pnlEmpty2">No holdings yet</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ===== ADD / EDIT MODAL ===== -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal" id="modal">
+      <div class="modal-header">
+        <h2 class="modal-title" id="modalTitle">Add Stock</h2>
+        <button class="modal-close" id="modalClose" aria-label="Close">✕</button>
+      </div>
+      <form class="modal-form" id="stockForm" novalidate>
+        <input type="hidden" id="editIndex" value="-1" />
+        <div class="form-row">
+          <div class="form-group">
+            <label for="fSymbol">Symbol <span class="req">*</span></label>
+            <input type="text" id="fSymbol" placeholder="e.g. RELIANCE" required />
+          </div>
+          <div class="form-group">
+            <label for="fName">Company Name <span class="req">*</span></label>
+            <input type="text" id="fName" placeholder="e.g. Reliance Industries" required />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="fQty">Quantity <span class="req">*</span></label>
+            <input type="number" id="fQty" placeholder="0" min="0.0001" step="any" required />
+          </div>
+          <div class="form-group">
+            <label for="fBuyPrice">Buy Price (₹) <span class="req">*</span></label>
+            <input type="number" id="fBuyPrice" placeholder="0.00" min="0.0001" step="any" required />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="fCurrentPrice">Current Price (₹) <span class="req">*</span></label>
+            <input type="number" id="fCurrentPrice" placeholder="0.00" min="0.0001" step="any" required />
+          </div>
+          <div class="form-group">
+            <label for="fDate">Purchase Date <span class="req">*</span></label>
+            <input type="date" id="fDate" required />
+          </div>
+        </div>
+        <div class="form-preview" id="formPreview"></div>
+        <div class="form-actions">
+          <button type="button" class="btn btn-ghost" id="cancelModal">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="submitBtn">Add Stock</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===== TOAST ===== -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- ===== CONFIRM DIALOG ===== -->
+  <div class="modal-overlay" id="confirmOverlay">
+    <div class="modal modal--sm">
+      <div class="modal-header">
+        <h2 class="modal-title">Delete Stock</h2>
+      </div>
+      <p class="confirm-msg" id="confirmMsg">Are you sure you want to delete this stock?</p>
+      <div class="form-actions">
+        <button class="btn btn-ghost" id="confirmCancel">Cancel</button>
+        <button class="btn btn-danger" id="confirmOk">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
